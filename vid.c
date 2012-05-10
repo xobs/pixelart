@@ -12,23 +12,29 @@ struct vid_state {
     uint8_t          frame;
 };
 
+void get_next_pixel(uint32_t x, uint32_t y, uint32_t frame,
+                    uint8_t *r, uint8_t *g, uint8_t *b);
+
 int redraw(struct vid_state *state) {
     SDL_Surface *screen = state->screen;
-    int x, y;
-    int r, g, b;
+    uint32_t x, y;
+    uint8_t r, g, b;
     int *pixels = (int *)screen->pixels;
     uint32_t px;
 
-    r = 0;
-    g = 255;
-    b = 0;
+    uint32_t start = SDL_GetTicks();
     for(y=0; y<screen->h; y++) {
         for(x=0; x<screen->w; x++) {
+            get_next_pixel(x, y, state->frame, &r, &g, &b);
             px = SDL_MapRGB(screen->format, r, g, b);
             pixels[y*screen->w+x] = px;
         }
     }
     SDL_Flip(screen);
+    uint32_t end = SDL_GetTicks();
+    if (!(state->frame % 60))
+        fprintf(stderr, "Frame %d completed in %d msecs\n", state->frame,
+                end-start);
     return 0;
 }
 
