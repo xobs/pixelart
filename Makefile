@@ -1,7 +1,7 @@
 SOURCES=vid.c twister.c
 OBJECTS=$(SOURCES:.c=.o)
 EXEC=twister
-MY_CFLAGS += `pkg-config sdl --cflags` -Wall -Werror -O0 -g
+MY_CFLAGS += `pkg-config sdl --cflags` -Wall -O2 -g
 MY_LIBS += `pkg-config sdl --libs`
 
 all: $(OBJECTS)
