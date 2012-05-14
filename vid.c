@@ -46,10 +46,12 @@ signal_redraw(Uint32 interval, void *state)
 
     ((struct vid_state *)state)->frame++;
 
-    /* Issue a redraw */
-    e.type = SDL_USEREVENT;
-    e.user.code = 1;
-    SDL_PushEvent(&e);
+    /* Issue a redraw (if one isn't pending) */
+    if (!SDL_PeepEvents(&e, 1, SDL_PEEKEVENT, SDL_ALLEVENTS)) {
+        e.type = SDL_USEREVENT;
+        e.user.code = 1;
+        SDL_PushEvent(&e);
+    }
     return interval;
 }
 
